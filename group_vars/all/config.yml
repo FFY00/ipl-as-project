@@ -1,0 +1,7 @@
+---
+
+packages:
+  - pacman-contrib
+  - qemu-guest-agent
+  - fish
+  - neovim

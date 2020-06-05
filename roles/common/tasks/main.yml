@@ -1,0 +1,27 @@
+---
+
+- name: Install mirrorlist
+  copy:
+    src: mirrorlist
+    dest: /etc/pacman.d/mirrorlist
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Update system
+  pacman:
+    update_cache: yes
+    upgrade: yes
+
+- name: Install packages
+  pacman:
+    name: '{{ packages }}'
+    state: present
+
+- name: Install pacman config
+  copy:
+    src: pacman.conf
+    dest: /etc/pacman.conf
+    mode: 0644
+    owner: root
+    group: root
