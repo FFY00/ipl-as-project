@@ -1,0 +1,37 @@
+---
+
+- name: Install grafana
+  pacman:
+    name: grafana
+    state: present
+
+- name: Make nginx log dir
+  file:
+    path: /var/log/nginx/grafana
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install grafana config
+  template:
+    src: grafana.ini.j2
+    dest: /etc/grafana.ini
+    owner: grafana
+    group: root
+    mode: 0600
+  notify: restart grafana
+
+- name: Fix /var/lib/grafana permissions
+  file:
+    path: /var/lib/grafana
+    mode: 0700
+    owner: grafana
+    group: grafana
+
+- name: Start and enable service
+  service:
+    name: grafana
+    state: started
+    enabled: true
+

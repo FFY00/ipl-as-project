@@ -1,0 +1,13 @@
+---
+
+- name: Install prometheus
+  pacman:
+    name: prometheus-node-exporter
+    state: present
+
+- name: Enable prometheus-node-exporter service
+  service:
+    name: prometheus-node-exporter
+    enabled: yes
+    state: started
+

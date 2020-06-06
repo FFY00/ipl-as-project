@@ -1,0 +1,19 @@
+---
+
+- name: Install prometheus
+  pacman:
+    name: prometheus
+    state: present
+
+- name: Install prometheus config
+  copy:
+    src: prometheus.yml
+    dest: /etc/prometheus/prometheus.yml
+  notify:
+    - reload prometheus
+
+- name: Enable prometheus service
+  service:
+    name: prometheus
+    enabled: yes
+    state: started

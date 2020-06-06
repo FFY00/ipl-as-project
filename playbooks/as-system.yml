@@ -12,3 +12,6 @@
     - { role: unbound, tags: ['unbound'] }
     - { role: certbot, tags: ['certbot'] }
     - { role: nginx, tags: ['nginx'] }
+    - { role: grafana, tags: ['grafana'] }
+    - { role: prometheus, tags: ['prometheus'] }
+    - { role: prometheus_node, tags: ['prometheus_node'] }
