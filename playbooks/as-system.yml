@@ -9,3 +9,4 @@
     - { role: users, tags: ['users'] }
     - { role: sudo, tags: ['sudo'] }
     - { role: sshd, tags: ['sshd'] }
+    - { role: unbound, tags: ['unbound'] }

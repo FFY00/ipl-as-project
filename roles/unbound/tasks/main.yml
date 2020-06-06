@@ -1,0 +1,43 @@
+---
+
+- name: Install unbound
+  pacman:
+    name: unbound
+    state: present
+
+- name: Install config
+  copy:
+    src: unbound.conf
+    dest: /etc/unbound/unbound.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart unbound
+
+- name: Install ad blacklist
+  copy:
+    src: ad-blacklist.conf
+    dest: /etc/unbound/ad-blacklist.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart unbound
+
+- name: Create remote-control keys
+  command: unbound-control-setup creates=/etc/unbound/unbound_control.key
+
+- name: Enable unbound service
+  service:
+    name: unbound
+    state: started
+    enabled: yes
+
+- name: Set unbound as the local DNS server
+  copy:
+    src: resolv.conf
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
