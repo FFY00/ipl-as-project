@@ -1,0 +1,58 @@
+---
+
+- name: Create user groups
+  group:
+    name: '{{ item }}'
+    state: present
+    system: no
+  with_items: '{{ user_groups }}'
+
+- name: Create users
+  user:
+    name: '{{ item.key }}'
+    group: users
+    groups: '{{ item.value.groups | join(",") }}'
+    comment: '{{ item.value.name }}'
+    shell: '{{ item.value.shell | default("/bin/bash") }}'
+    state: present
+  with_dict: '{{ users }}'
+
+- name: Create .ssh directory
+  file:
+    path: '/home/{{ item.key }}/.ssh'
+    state: directory
+    owner: '{{ item.key }}'
+    group: users
+    mode: 0700
+  with_dict: '{{ users }}'
+
+- name: Configure ssh keys
+  template:
+    src: authorized_keys.j2
+    dest: '/home/{{ item.key }}/.ssh/authorized_keys'
+    owner: '{{ item.key }}'
+    group: users
+    mode: 0600
+  when: item.value.ssh_key is defined
+  with_dict: '{{ users }}'
+
+- name: Remove ssh keys if undefined
+  file:
+    path: /home/{{item.key}}/.ssh/authorized_keys
+    state: absent
+  when: item.value.ssh_key is not defined
+  with_dict: '{{ users }}'
+
+- name: Get list of remote users
+  find:
+    paths: '/home'
+    file_type: 'directory'
+  register: all_users
+
+- name: Disable ssh keys of disabled users
+  file:
+    path: '/home/{{ item }}/.ssh/authorized_keys'
+    state: absent
+  when: item not in users
+  with_items: '{{ all_users.files | map(attribute="path") | map("basename") | list }}'
+
