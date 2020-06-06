@@ -1,0 +1,41 @@
+---
+
+- name: Install certbot
+  pacman:
+    name: certbot
+    state: present
+
+- name: Install letsencrypt hook
+  copy:
+    src: hook.sh
+    dest: /etc/letsencrypt/hook.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create letsencrypt hook dir
+  file:
+    state: directory
+    path: /etc/letsencrypt/hook.d
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install letsencrypt renewal service
+  copy:
+    src: '{{ item }}'
+    dest: '/etc/systemd/system/{{ item }}'
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - certbot-renewal.service
+    - certbot-renewal.timer
+  notify:
+    - daemon reload
+
+- name: Activate letsencrypt renewal service
+  service:
+    name: certbot-renewal.timer
+    enabled: yes
+    state: started

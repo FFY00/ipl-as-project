@@ -10,3 +10,5 @@
     - { role: sudo, tags: ['sudo'] }
     - { role: sshd, tags: ['sshd'] }
     - { role: unbound, tags: ['unbound'] }
+    - { role: certbot, tags: ['certbot'] }
+    - { role: nginx, tags: ['nginx'] }
