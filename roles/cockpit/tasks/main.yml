@@ -1,0 +1,21 @@
+---
+
+- name: Install cockpit
+  pacman:
+    name: cockpit cockpit-dashboard cockpit-docker cockpit-machines cockpit-pcp cockpit-podman networkmanager packagekit udisks2
+    state: present
+  notify:
+    - reload cockpit
+
+- name: Change port
+  replace:
+    path: /usr/lib/systemd/system/cockpit.socket
+    regexp: 'ListenStream=.*'
+    replace: 'ListenStream=6060'
+
+- name: Enable cockpit service
+  service:
+    name: cockpit.socket
+    enabled: yes
+    state: started
+

@@ -16,3 +16,4 @@
     - { role: prometheus, tags: ['prometheus'] }
     - { role: prometheus_node, tags: ['prometheus_node'] }
     - { role: public_html, tags: ['public_html'] }
+    - { role: cockpit, tags: ['cockpit'] }

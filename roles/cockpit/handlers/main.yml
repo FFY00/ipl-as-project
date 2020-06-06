@@ -1,0 +1,6 @@
+---
+
+- name: reload cockpit
+  service:
+    name: cockpit.socket
+    state: restarted
