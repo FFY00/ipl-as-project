@@ -19,7 +19,7 @@ resource "libvirt_cloudinit_disk" "commoninit" {
 }
 
 resource "libvirt_volume" "as-system1" {
-  name           = "test"
+  name           = "as-system1"
   base_volume_id = libvirt_volume.arch_cloudinit.id
   pool           = "default"
   size           = 60000000000

@@ -1,0 +1,11 @@
+---
+
+- name: Setup as-system
+  hosts: as_system1
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: common, tags: ['common'] }
+    - { role: users, tags: ['users'] }
+    - { role: sudo, tags: ['sudo'] }
+    - { role: sshd, tags: ['sshd'] }
