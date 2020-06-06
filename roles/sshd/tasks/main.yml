@@ -1,0 +1,29 @@
+---
+
+- name: Install openssh
+  pacman:
+    name: openssh
+    state: present
+
+- name: Configure sshd
+  copy:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0644
+    validate: '/usr/sbin/sshd -t -f %s'
+  notify:
+    - restart sshd
+
+- name: Set /etc/ssh permissions
+  file:
+    path: /etc/ssh
+    mode: 0600
+
+- name: Enable sshd service
+  service:
+    name: sshd
+    enabled: yes
+    state: started
+
