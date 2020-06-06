@@ -1,0 +1,25 @@
+---
+
+- name: Install libratbag
+  pacman:
+    name: libratbag
+    state: present
+
+- name: Make nginx log dir
+  file:
+    path: /var/log/nginx/libratbag_doc
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Set up nginx
+  copy:
+    src: nginx.d.conf
+    dest: /etc/nginx/nginx.d/libratbag_doc.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload nginx
+
