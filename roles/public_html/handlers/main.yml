@@ -1,0 +1,4 @@
+---
+
+- name: regenerate public_html
+  command: systemctl daemon-reload

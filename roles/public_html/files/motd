@@ -1,0 +1,5 @@
+To share files please create a ~/public_html directory and set the following ACL
+rules for the http user to be able to read it.
+
+setfacl -m user:http:x ~
+setfacl -m user:http:rx ~/public_html

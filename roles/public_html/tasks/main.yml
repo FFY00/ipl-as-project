@@ -1,0 +1,65 @@
+---
+
+- name: Install index generation script
+  copy:
+    src: generate-public_html
+    dest: /usr/local/bin/generate-public_html
+    owner: root
+    group: root
+    mode: 0755
+  notify:
+    - regenerate public_html
+
+- name: Install public_html units
+  copy:
+    src: '{{ item }}'
+    dest: '/etc/systemd/system/{{ item }}'
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - generate-public_html.timer
+    - generate-public_html.service
+
+- name: Enable public_html units
+  service:
+    name: '{{ item }}'
+    enabled: yes
+    state: started
+  with_items:
+    - generate-public_html.timer
+    - generate-public_html.service
+
+- name: Make nginx log dir
+  file:
+    path: /var/log/nginx/public_html
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Make public_html
+  file:
+    path: /srv/public_html
+    state: directory
+    owner: http
+    group: http
+    mode: 0755
+
+- name: Set up nginx
+  copy:
+    src: nginx.d.conf
+    dest: /etc/nginx/nginx.d/public_html.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload nginx
+
+- name: Install motd
+  copy:
+    src: motd
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: 0644

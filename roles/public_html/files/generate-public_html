@@ -1,0 +1,44 @@
+#!/bin/bash -e
+
+target=/srv/public_html/index.html
+
+if [ ! -f $target ]; then
+  mkdir -p $(dirname $target)
+  touch $target
+fi
+
+cat >$target.tmp <<END
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>File Share</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-lg-6">
+          <h1>Available User Directories</h1>
+          <ul class="list-group">
+END
+
+cd /
+sudo -u http find /home -mindepth 1 -maxdepth 1 \
+                        -exec test -r {}/public_html \; \
+                        -printf '            <li><a href="/~%P">%P</a></li>\n' \
+                        | sort >> $target.tmp
+
+cat >>$target.tmp <<END
+          </ul>
+        </div>
+        <div class="col-sm-3"></div>
+      </div>
+    </div>
+  </body>
+</html>
+END
+
+mv $target.tmp $target
