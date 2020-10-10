@@ -8,6 +8,14 @@
     owner: root
     group: root
 
+- name: Install pacman config
+  copy:
+    src: pacman.conf
+    dest: /etc/pacman.conf
+    mode: 0644
+    owner: root
+    group: root
+
 - name: Update system
   pacman:
     update_cache: yes
@@ -17,11 +25,3 @@
   pacman:
     name: '{{ packages }}'
     state: present
-
-- name: Install pacman config
-  copy:
-    src: pacman.conf
-    dest: /etc/pacman.conf
-    mode: 0644
-    owner: root
-    group: root
